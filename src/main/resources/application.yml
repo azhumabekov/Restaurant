@@ -1,0 +1,13 @@
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    password: adilet.2005
+    url: jdbc:postgresql://localhost:5432/restaurant
+    username: postgres
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+server:
+  port: 8080
