@@ -1,4 +1,4 @@
-package java15.model;
+package java15.models;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Table(name = "cheque")
+@Table(name = "cheques")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -23,7 +23,7 @@ public class Cheque {
 
 
     @ManyToOne
-    @JoinTable(name = "employee_id")
+    @JoinColumn(name = "employee_id")
     Employee employee;
 
     @ManyToMany

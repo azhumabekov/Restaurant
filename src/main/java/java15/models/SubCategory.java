@@ -1,4 +1,4 @@
-package java15.model;
+package java15.models;
 
 import jakarta.persistence.*;
 import lombok.*;

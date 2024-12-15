@@ -1,11 +1,15 @@
-package java15.model;
+package java15.models;
 
 import jakarta.persistence.*;
 import java15.enums.Role;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -15,7 +19,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Employee {
+public class Employee implements UserDetails {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
@@ -34,6 +39,20 @@ public class Employee {
     List<Cheque> cheques;
 
     @ManyToOne
-    @JoinColumn(name = "resraurant_id")
+    @JoinColumn(name = "resraurant_id", nullable = false)
     Restaurant restaurant;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.name()));}
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+
 }

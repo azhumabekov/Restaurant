@@ -1,9 +1,14 @@
 package java15.enums;
 
-public enum Role {
+import org.springframework.security.core.GrantedAuthority;
+
+public enum Role implements GrantedAuthority {
     ADMIN,  WAITER,
         CHEF;
 
-    public enum RestType {
+
+    @Override
+    public String getAuthority() {
+        return name();
     }
 }

@@ -1,9 +1,8 @@
-package java15.model;
+package java15.models;
 
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.springframework.security.core.userdetails.User;
 
 import java.util.List;
 
