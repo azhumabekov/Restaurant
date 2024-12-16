@@ -34,4 +34,12 @@ public class Cheque {
     )
     List<MenuItem> menuItem;
 
+    @PrePersist
+    void setCreatedAt() {
+        this.createdAt = LocalDate.now();
+    }
+    @PreUpdate
+    void setUpdatedAt() {
+        this.createdAt = LocalDate.now();
+    }
 }

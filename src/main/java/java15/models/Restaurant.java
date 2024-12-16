@@ -20,7 +20,9 @@ public class Restaurant {
     Long id;
     String name;
     String location;
+    @Enumerated(EnumType.STRING)
     RestType restType;
+
     int numberOfEmployees;
     String service;
 

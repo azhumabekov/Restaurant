@@ -33,6 +33,8 @@ public class Employee implements UserDetails {
     @Enumerated(EnumType.STRING)
     Role role;
 
+//    boolean isActive = true;
+
     int experience;
 
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
@@ -54,5 +56,14 @@ public class Employee implements UserDetails {
         return password;
     }
 
+//    @Override
+//    public boolean isAccountNonLocked() {
+//        return isActive;
+//    }
+//
+//    @Override
+//    public boolean isEnabled() {
+//        return isActive;
+//    }
 
 }

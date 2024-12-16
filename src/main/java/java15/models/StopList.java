@@ -17,12 +17,17 @@ public class StopList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-
     String reason;
     LocalDate date;
 
     @OneToOne
     @JoinColumn(name = "menu_item_id")
     MenuItem menuItem;
-}
 
+
+
+
+
+
+
+}

@@ -62,8 +62,8 @@ public class SecurityConfig {
         httpSecurity.authorizeHttpRequests(
                 authorizeRequests -> {
                     authorizeRequests.requestMatchers(
-                                    "/api/auth/sign-in",
-                                    "/api/auth/sign-up"
+                                    "/auth/login",
+                                    "/auth/register"
                             ).permitAll()
                             .anyRequest()
                             .authenticated();
