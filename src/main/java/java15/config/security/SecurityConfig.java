@@ -63,7 +63,9 @@ public class SecurityConfig {
                 authorizeRequests -> {
                     authorizeRequests.requestMatchers(
                                     "/auth/login",
-                                    "/auth/register"
+                                    "/auth/register",
+                                    "/auth/password/request-reset",
+                                    "auth/password/reset"
                             ).permitAll()
                             .anyRequest()
                             .authenticated();
