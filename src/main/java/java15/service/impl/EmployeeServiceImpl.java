@@ -7,8 +7,8 @@ import java15.dto.request.RegistrationRequest;
 import java15.dto.response.AuthResponse;
 import java15.models.Employee;
 import java15.models.Restaurant;
-import java15.repo.EmployeeRepository;
-import java15.repo.RestaurantRepository;
+import java15.repository.EmployeeRepository;
+import java15.repository.RestaurantRepository;
 import java15.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,8 +19,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

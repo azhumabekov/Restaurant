@@ -2,15 +2,14 @@ package java15.service.impl;
 
 import java15.models.Employee;
 import java15.models.PasswordResetToken;
-import java15.repo.EmployeeRepository;
-import java15.repo.PasswordResetTokenRepository;
+import java15.repository.EmployeeRepository;
+import java15.repository.PasswordResetTokenRepository;
 import java15.service.PasswordResetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service

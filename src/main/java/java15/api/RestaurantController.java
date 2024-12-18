@@ -1,5 +1,6 @@
-package java15.controllers;
+package java15.api;
 
+import io.swagger.v3.oas.annotations.Operation;
 import java15.dto.request.RestaurantRequest;
 import java15.dto.response.RestaurantResponse;
 import java15.service.RestaurantService;
@@ -11,13 +12,15 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin/restaurants")
+@RequestMapping("/api/admin/restaurants")
 @RequiredArgsConstructor
 public class RestaurantController {
 
     private final RestaurantService restaurantService;
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "create Restaurant", description = "aj;dfadsfdsa")
     public ResponseEntity<RestaurantResponse> createRestaurant(@RequestBody RestaurantRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(restaurantService.createRestaurant(request));
     }

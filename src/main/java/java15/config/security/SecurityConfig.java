@@ -1,14 +1,12 @@
 package java15.config.security;
 
 import java15.config.jwt.JwtFilter;
-import java15.repo.EmployeeRepository;
+import java15.repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -57,24 +55,50 @@ public class SecurityConfig {
 //    }
 
 
+    //    @Bean
+//    SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+//        httpSecurity.authorizeHttpRequests(
+//                authorizeRequests -> {
+//                    authorizeRequests.requestMatchers(
+//                                    "/",
+//                                    "/auth/login",
+//                                    "/auth/register",
+//                                    "/auth/password/request-reset",
+//                                    "/auth/password/reset",
+//                                    "/v3/api-docs/**",
+//                                    "/swagger-ui/**",
+//                                    "/swagger-ui.html"
+//                            ).permitAll()
+//                            .anyRequest()
+//                            .authenticated();
+//                }
+//        );
+//        httpSecurity.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+//        httpSecurity.csrf(AbstractHttpConfigurer::disable);
+//        return httpSecurity.build();
+//    }
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.authorizeHttpRequests(
-                authorizeRequests -> {
-                    authorizeRequests.requestMatchers(
-                                    "/auth/login",
-                                    "/auth/register",
-                                    "/auth/password/request-reset",
-                                    "auth/password/reset"
-                            ).permitAll()
-                            .anyRequest()
-                            .authenticated();
-                }
-        );
-        httpSecurity.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-        httpSecurity.csrf(AbstractHttpConfigurer::disable);
-        return httpSecurity.build();
+    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests(request -> {
+            request
+                    .requestMatchers(
+                            "/**",
+                            "/api/auth/*",
+                            "/swagger-ui/index.html",
+                            "/v3/api-docs",
+                            "/swagger-resources/**"
+                    )
+                    .permitAll()
+                    .anyRequest()
+                    .authenticated()
+            ;
+        });
+        http.csrf(AbstractHttpConfigurer::disable);
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+//        http.httpBasic(Customizer.withDefaults());
+        return http.build();
     }
+
 
     @Bean
     public UserDetailsService userDetailsService() {

@@ -6,7 +6,7 @@ import java15.service.MenuItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java15.models.MenuItem;
-import java15.repo.MenuItemRepository;
+import java15.repository.MenuItemRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;

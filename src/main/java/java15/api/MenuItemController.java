@@ -1,4 +1,4 @@
-package java15.controllers;
+package java15.api;
 
 import java15.dto.request.MenuItemRequest;
 import java15.dto.response.MenuItemResponse;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/api/admin")
 @RequiredArgsConstructor
 public class MenuItemController {
 

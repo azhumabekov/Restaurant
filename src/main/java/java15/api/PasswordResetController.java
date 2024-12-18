@@ -1,6 +1,5 @@
-package java15.controllers;
+package java15.api;
 
-import java15.dto.request.ResetPasswordRequest;
 import java15.service.PasswordResetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -9,27 +8,27 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/auth/password")
+@RequestMapping("/api/auth/password")
 @RequiredArgsConstructor
 public class PasswordResetController {
 
     private final PasswordResetService passwordResetService;
 
-//    @PostMapping("/request-reset")
+    //    @PostMapping("/request-reset")
 //    public ResponseEntity<String> requestPasswordReset(@RequestParam String email) {
 //        String token = passwordResetService.generateResetToken(email);
 //        // Возвращаем токен (в реальном приложении токен отправляется по email)
 //        return ResponseEntity.ok("Password reset token: " + token);
 //    }
-@PostMapping("/request-reset")
-public ResponseEntity<String> requestPasswordReset(@RequestBody Map<String, String> body) {
-    String email = body.get("email");
-    if (email == null || email.isEmpty()) {
-        return ResponseEntity.badRequest().body("Email is required.");
+    @PostMapping("/request-reset")
+    public ResponseEntity<String> requestPasswordReset(@RequestBody Map<String, String> body) {
+        String email = body.get("email");
+        if (email == null || email.isEmpty()) {
+            return ResponseEntity.badRequest().body("Email is required.");
+        }
+        String token = passwordResetService.generateResetToken(email);
+        return ResponseEntity.ok("Password reset token: " + token);
     }
-    String token = passwordResetService.generateResetToken(email);
-    return ResponseEntity.ok("Password reset token: " + token);
-}
 
 //    @PostMapping("/reset")
 //    public ResponseEntity<String> resetPassword(@RequestParam ResetPasswordRequest body) {

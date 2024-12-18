@@ -3,7 +3,7 @@ package java15.service.impl;
 import java15.dto.request.RestaurantRequest;
 import java15.dto.response.RestaurantResponse;
 import java15.models.Restaurant;
-import java15.repo.RestaurantRepository;
+import java15.repository.RestaurantRepository;
 import java15.service.RestaurantService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

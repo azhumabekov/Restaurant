@@ -3,7 +3,7 @@ package java15.service.impl;
 import java15.dto.request.CategoryRequest;
 import java15.dto.response.CategoryResponse;
 import java15.models.Category;
-import java15.repo.CategoryRepository;
+import java15.repository.CategoryRepository;
 import java15.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -43,6 +43,12 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void deleteCategory(Long id) {
         categoryRepo.deleteById(id);
+    }
+
+    @Override
+    public CategoryResponse updateCategory(Long id, CategoryRequest request) {
+//        return categoryRepo.saveAndFlush(id, request);
+        return null;
     }
 
 }

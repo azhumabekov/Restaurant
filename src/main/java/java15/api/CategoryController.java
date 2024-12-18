@@ -1,4 +1,4 @@
-package java15.controllers;
+package java15.api;
 
 import java15.dto.request.CategoryRequest;
 import java15.dto.response.CategoryResponse;
@@ -11,16 +11,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin/categories")
+@RequestMapping("/api/admin/categories")
 @RequiredArgsConstructor
 public class CategoryController {
 
     private final CategoryService categoryService;
-
-    @PostMapping
-    public ResponseEntity<CategoryResponse> createCategory(@RequestBody CategoryRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.createCategory(request));
-    }
 
     @GetMapping
     public List<CategoryResponse> getAllCategories() {
@@ -29,11 +24,22 @@ public class CategoryController {
 
     @GetMapping("/{id}")
     public ResponseEntity<CategoryResponse> getCategoryById(@PathVariable Long id) {
-        return ResponseEntity.status(HttpStatus.OK).body(categoryService.getCategoryById(id));
+        return ResponseEntity.ok(categoryService.getCategoryById(id));
     }
+
+    @PostMapping
+    public ResponseEntity<CategoryResponse> createCategory(@RequestBody CategoryRequest request) {
+        return ResponseEntity.status(201).body(categoryService.createCategory(request));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<CategoryResponse> updateCategory(@PathVariable Long id, @RequestBody CategoryRequest request) {
+        return ResponseEntity.ok(categoryService.updateCategory(id, request));
+    }
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<CategoryResponse> deleteCategoryById(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
         categoryService.deleteCategory(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.noContent().build();
     }
 }
