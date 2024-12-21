@@ -26,11 +26,13 @@ public class RestaurantController {
     }
 
     @GetMapping
+    @Operation(summary = "getAll")
     public List<RestaurantResponse> getAllRestaurants() {
         return restaurantService.getAllRestaurants();
     }
 
     @GetMapping("/{id}")
+
     public ResponseEntity<RestaurantResponse> getRestaurantById(@PathVariable Long id) {
         return ResponseEntity.ok(restaurantService.getRestaurantById(id));
     }

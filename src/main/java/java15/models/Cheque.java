@@ -1,6 +1,7 @@
 package java15.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -18,6 +19,7 @@ public class Cheque {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
+
     Long priceAverage;
     LocalDate createdAt;
 
@@ -42,4 +44,5 @@ public class Cheque {
     void setUpdatedAt() {
         this.createdAt = LocalDate.now();
     }
+
 }

@@ -3,13 +3,14 @@ package java15.repository;// src/main/java/com/restaurant/repositories/PasswordR
 import java15.models.Employee;
 import java15.models.PasswordResetToken;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
-@RepositoryRestResource
 
+@Repository
 public interface PasswordResetTokenRepository extends JpaRepository<PasswordResetToken, Long> {
     Optional<PasswordResetToken> findByToken(String token);
 
     PasswordResetToken findByEmployee(Employee employee);
+
 }

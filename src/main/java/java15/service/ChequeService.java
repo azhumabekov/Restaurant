@@ -15,4 +15,6 @@ public interface ChequeService {
     ChequeResponse updateCheque(Long id, ChequeRequest request);
 
     void deleteCheque(Long id);
+
+    String priceAverage();
 }

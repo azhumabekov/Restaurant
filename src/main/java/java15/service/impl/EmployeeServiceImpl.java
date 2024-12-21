@@ -5,6 +5,7 @@ import java15.dto.request.AuthRequest;
 import java15.dto.request.ChangePasswordRequest;
 import java15.dto.request.RegistrationRequest;
 import java15.dto.response.AuthResponse;
+import java15.enums.Role;
 import java15.models.Employee;
 import java15.models.Restaurant;
 import java15.repository.EmployeeRepository;
@@ -46,8 +47,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setPassword(passwordEncoder.encode(request.getPassword()));
         employee.setPhoneNumber(request.getPhoneNumber());
         employee.setDateOfBirth(request.getDateOfBirth());
-        employee.setRole(request.getRole());
         employee.setExperience(request.getExperience());
+        employee.setRole(Role.WAITER);
         employee.setRestaurant(restaurant);
         employeeRepository.save(employee);
         log.info("User with email {} registered successfully!", request.getEmail());

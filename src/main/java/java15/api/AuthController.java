@@ -2,7 +2,7 @@ package java15.api;
 
 
 import io.swagger.v3.oas.annotations.Operation;
-import java15.config.jwt.JwtService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java15.dto.request.AuthRequest;
 import java15.dto.request.ChangePasswordRequest;
 import java15.dto.request.RegistrationRequest;
@@ -11,18 +11,14 @@ import java15.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
-//@Tag(name = "Authentication", description = "Endpoints for authentication and user management")
+@Tag(name = "Authentication", description = "Endpoints for authentication and user management")
 @RequiredArgsConstructor
 public class AuthController {
-                            /// Manager ///
-    private final AuthenticationProvider authenticationManager;
     private final EmployeeService employeeService;
-    private final JwtService jwtService;
 
     @PostMapping("/login")
     @Operation(summary = "User login", description = "Authenticate user and return a success message")

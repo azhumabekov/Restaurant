@@ -12,7 +12,6 @@ public class RegistrationRequest {
     private String password;
     private String phoneNumber;
     private LocalDate dateOfBirth;
-    private Role role;
     private int experience;
     private Long restaurantId;
 }
