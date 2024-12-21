@@ -2,6 +2,8 @@ package java15.api;
 
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java15.dto.request.AuthRequest;
 import java15.dto.request.ChangePasswordRequest;
@@ -22,7 +24,11 @@ public class AuthController {
 
     @PostMapping("/login")
     @Operation(summary = "User login", description = "Authenticate user and return a success message")
-
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Login successful"),
+            @ApiResponse(responseCode = "404", description = "User not found"),
+            @ApiResponse(responseCode = "401", description = "Incorrect password")
+    })
     public AuthResponse login(@RequestBody AuthRequest request) {
         return employeeService.login(request);
     }

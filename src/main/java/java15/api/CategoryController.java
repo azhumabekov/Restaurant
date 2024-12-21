@@ -1,10 +1,10 @@
 package java15.api;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java15.dto.request.CategoryRequest;
 import java15.dto.response.CategoryResponse;
 import java15.service.CategoryService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/admin/categories")
 @RequiredArgsConstructor
+@Tag(name = "category")
 public class CategoryController {
 
     private final CategoryService categoryService;
