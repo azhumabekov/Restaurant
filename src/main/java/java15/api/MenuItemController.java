@@ -1,5 +1,6 @@
 package java15.api;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java15.dto.request.MenuItemRequest;
 import java15.dto.response.MenuItemResponse;
 import java15.service.MenuItemService;
@@ -12,6 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/admin")
 @RequiredArgsConstructor
+@Tag(name = "MenuItem")
 public class MenuItemController {
 
 

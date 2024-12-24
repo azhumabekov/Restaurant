@@ -1,5 +1,6 @@
 package java15.api;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java15.dto.request.ChequeRequest;
 import java15.dto.response.ChequeResponse;
 import java15.service.ChequeService;
@@ -12,6 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/admin/cheques")
 @RequiredArgsConstructor
+@Tag(name = "cheque")
 public class ChequeController {
 
     private final ChequeService chequeService;

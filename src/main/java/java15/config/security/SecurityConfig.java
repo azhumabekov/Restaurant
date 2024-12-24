@@ -26,57 +26,6 @@ public class SecurityConfig {
     private final JwtFilter jwtFilter;
     private final EmployeeRepository employeeRepository;
 
-
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        http.csrf().disable()
-//                .authorizeRequests()
-//                .antMatchers("/admin/**").hasAuthority("ADMIN")
-//                .antMatchers("/cook/**").hasAuthority("COOK")
-//                .antMatchers("/waiter/**").hasAuthority("WAITER")
-//                .anyRequest().authenticated()
-//                .and()
-//                .formLogin()
-//                .permitAll()
-//                .and()
-//                .logout()
-//                .permitAll();
-//
-//        return http.build();
-//    }
-//
-//    @Bean
-//    public AuthenticationManager authManager(HttpSecurity http, PasswordEncoder passwordEncoder) throws Exception {
-//        return http.getSharedObject(AuthenticationManagerBuilder.class)
-//                .userDetailsService(userDetailsService())
-//                .passwordEncoder(passwordEncoder)
-//                .and()
-//                .build();
-//    }
-
-
-    //    @Bean
-//    SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-//        httpSecurity.authorizeHttpRequests(
-//                authorizeRequests -> {
-//                    authorizeRequests.requestMatchers(
-//                                    "/",
-//                                    "/auth/login",
-//                                    "/auth/register",
-//                                    "/auth/password/request-reset",
-//                                    "/auth/password/reset",
-//                                    "/v3/api-docs/**",
-//                                    "/swagger-ui/**",
-//                                    "/swagger-ui.html"
-//                            ).permitAll()
-//                            .anyRequest()
-//                            .authenticated();
-//                }
-//        );
-//        httpSecurity.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-//        httpSecurity.csrf(AbstractHttpConfigurer::disable);
-//        return httpSecurity.build();
-//    }
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(request -> {

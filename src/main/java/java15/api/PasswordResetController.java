@@ -1,5 +1,6 @@
 package java15.api;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java15.service.PasswordResetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/auth/password")
 @RequiredArgsConstructor
+@Tag(name = "Password reset")
 public class PasswordResetController {
 
     private final PasswordResetService passwordResetService;

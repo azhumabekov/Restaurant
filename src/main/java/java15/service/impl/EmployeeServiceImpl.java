@@ -5,6 +5,8 @@ import java15.dto.request.AuthRequest;
 import java15.dto.request.ChangePasswordRequest;
 import java15.dto.request.RegistrationRequest;
 import java15.dto.response.AuthResponse;
+import java15.dto.response.EmployeeResponse;
+import java15.dto.response.SimpleResponse;
 import java15.enums.Role;
 import java15.models.Employee;
 import java15.models.Restaurant;
@@ -20,6 +22,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -67,20 +72,60 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeRepository.save(employee);
     }
 
-    @Override
-    public AuthResponse login(AuthRequest request) {
-        Authentication authentication = authenticationProvider.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-        );
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        Employee employee = (Employee) authentication.getPrincipal();
+//    @Override
+//    public AuthResponse login(AuthRequest request) {
+//        if (employeeRepository.findByEmail(request.getEmail()).isPresent()) {
+//             SimpleResponse.builder()
+//                    .status(HttpStatus.BAD_REQUEST)
+//                    .message("kot")
+//                    .build();
+//        }
+//        Authentication authentication = authenticationProvider.authenticate(
+//                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+//        );
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
+//        Employee employee = (Employee) authentication.getPrincipal();
+//
+//        return AuthResponse.builder()
+//                .jwtTokenResponse(jwtService.createToken(employee))
+//                .email(employee.getEmail())
+//                .role(employee.getRole())
+//                .httpStatus(HttpStatus.OK)
+//                .build();
+//
+//    }
+@Override
+public AuthResponse login(AuthRequest request) {
+    Authentication authentication = authenticationProvider.authenticate(
+            new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+    );
+    SecurityContextHolder.getContext().setAuthentication(authentication);
+    Employee employee = (Employee) authentication.getPrincipal();
 
-        return AuthResponse.builder()
-                .jwtTokenResponse(jwtService.createToken(employee))
-                .email(employee.getEmail())
-                .role(employee.getRole())
-                .httpStatus(HttpStatus.OK)
-                .build();
+    return AuthResponse.builder()
+            .jwtTokenResponse(jwtService.createToken(employee))
+            .email(employee.getEmail())
+            .role(employee.getRole())
+            .httpStatus(HttpStatus.OK)
+            .build();
+
+}
+
+    @Override
+    public List<EmployeeResponse> findAll() {
+//       return employeeRepository.findAll()
+//               .stream()
+//               .map(employee -> new EmployeeResponse(
+//                       employee.getId(),
+//                       employee.getFirstName(),
+//                       employee.getLastName(),
+//                       employee.getDateOfBirth(),
+//                       employee.getEmail(),
+//                       employee.getPhoneNumber(),
+//                       employee.getRole(),
+//                       employee.getExperience()
+//               )).collect(Collectors.toList());
+        return null;
 
     }
 

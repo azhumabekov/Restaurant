@@ -6,8 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
 
-import java.security.PrivateKey;
-
 @Data
 @AllArgsConstructor
 @Builder
@@ -17,6 +15,4 @@ public class AuthResponse {
     private HttpStatus httpStatus;
     private String email;
     private Role role;
-
-
 }

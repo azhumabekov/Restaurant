@@ -13,6 +13,8 @@ import java15.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,16 +23,20 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AuthController {
     private final EmployeeService employeeService;
+    private final AuthenticationProvider authenticationManager;
 
+
+    @Secured("ADMIN")
     @PostMapping("/login")
-    @Operation(summary = "User login", description = "Authenticate user and return a success message")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Login successful"),
-            @ApiResponse(responseCode = "404", description = "User not found"),
-            @ApiResponse(responseCode = "401", description = "Incorrect password")
-    })
-    public AuthResponse login(@RequestBody AuthRequest request) {
-        return employeeService.login(request);
+    @Operation(summary = "User login")
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "200", description = "Login successful"),
+//            @ApiResponse(responseCode = "404", description = "User not found"),
+//            @ApiResponse(responseCode = "401", description = "Incorrect password")
+//    })
+    public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request) {
+        AuthResponse login = employeeService.login(request);
+        return ResponseEntity.ok(login);
     }
 
     @PostMapping("/register")

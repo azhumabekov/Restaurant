@@ -1,6 +1,7 @@
 package java15.api;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java15.dto.request.RestaurantRequest;
 import java15.dto.response.RestaurantResponse;
 import java15.service.RestaurantService;
@@ -14,6 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/admin/restaurants")
 @RequiredArgsConstructor
+@Tag(name = "Restaurant")
 public class RestaurantController {
 
     private final RestaurantService restaurantService;
