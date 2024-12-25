@@ -5,11 +5,14 @@ import java15.dto.request.ChangePasswordRequest;
 import java15.dto.request.RegistrationRequest;
 import java15.dto.response.AuthResponse;
 import java15.dto.response.EmployeeResponse;
+import java15.models.Employee;
 
 import java.util.List;
 
 public interface EmployeeService {
     EmployeeResponse registerUser(RegistrationRequest request);
+
+    Employee addEmployee(String firstName, String lastName, Long restaurantId);
 
     void changePassword(ChangePasswordRequest request);
 

@@ -10,6 +10,7 @@ import java15.dto.request.RegistrationRequest;
 import java15.dto.response.AuthResponse;
 import java15.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,20 +24,19 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AuthController {
     private final EmployeeService employeeService;
-    private final AuthenticationProvider authenticationManager;
-
 
     //    @Secured("ADMIN")
-    @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
+//    @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "User login")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Login successful"),
             @ApiResponse(responseCode = "404", description = "User not found"),
             @ApiResponse(responseCode = "401", description = "Incorrect password")
     })
+    @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request) {
-        AuthResponse login = employeeService.login(request);
-        return ResponseEntity.ok(login);
+        AuthResponse response = employeeService.login(request);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/register")

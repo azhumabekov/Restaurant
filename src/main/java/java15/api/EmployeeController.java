@@ -2,13 +2,12 @@ package java15.api;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java15.dto.response.EmployeeResponse;
+import java15.models.Employee;
 import java15.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,11 +18,17 @@ import java.util.List;
 public class EmployeeController {
     private final EmployeeService employeeService;
 
-//    @Secured("ADMIN")
+    @Secured("ADMIN")
     @GetMapping
     public ResponseEntity<List<EmployeeResponse>> getAllEmployees() {
         List<EmployeeResponse> all = employeeService.findAll();
         return ResponseEntity.ok(all);
     }
 
+    @Secured("ADMIN")
+    @DeleteMapping
+    public ResponseEntity<String> delete(@RequestBody Long id) {
+        employeeService.removeEmployee(id);
+        return ResponseEntity.ok("Employee deleted");
+    }
 }

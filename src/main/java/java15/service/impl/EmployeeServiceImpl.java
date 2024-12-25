@@ -16,9 +16,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -62,7 +61,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         return null;
     }
 
-    // Добавление сотрудника
+    @Override
     public Employee addEmployee(String firstName, String lastName, Long restaurantId) {
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new IllegalArgumentException("Restaurant not found"));
@@ -86,13 +85,33 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeRepository.save(employee);
     }
 
+//    @Override
+//    public AuthResponse login(AuthRequest request) {
+//        Authentication authentication = authenticationProvider.authenticate(
+//                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+//        );
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
+//        Employee employee = (Employee) authentication.getPrincipal();
+//
+//        return AuthResponse.builder()
+//                .jwtTokenResponse(jwtService.createToken(employee))
+//                .email(employee.getEmail())
+//                .role(employee.getRole())
+//                .httpStatus(HttpStatus.OK)
+//                .build();
+//
+//    }
+
     @Override
     public AuthResponse login(AuthRequest request) {
-        Authentication authentication = authenticationProvider.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-        );
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        Employee employee = (Employee) authentication.getPrincipal();
+        // Ищем пользователя в базе данных по email
+        Employee employee = (Employee) employeeRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        // Проверяем, совпадает ли пароль
+        if (!passwordEncoder.matches(request.getPassword(), employee.getPassword())) {
+            throw new BadCredentialsException("Incorrect password");
+        }
 
         return AuthResponse.builder()
                 .jwtTokenResponse(jwtService.createToken(employee))
@@ -101,6 +120,22 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .httpStatus(HttpStatus.OK)
                 .build();
     }
+//@Override
+//public AuthResponse login(AuthRequest request) {
+//    Authentication authentication = authenticationProvider.authenticate(
+//            new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+//    );
+//    SecurityContextHolder.getContext().setAuthentication(authentication);
+//    Employee employee = (Employee) authentication.getPrincipal();
+//
+//    return AuthResponse.builder()
+//            .jwtTokenResponse(jwtService.createToken(employee))
+//            .email(employee.getEmail())
+//            .role(employee.getRole())
+//            .httpStatus(HttpStatus.OK)
+//            .build();
+//
+//}
 
     @Override
     public List<EmployeeResponse> findAll() {
