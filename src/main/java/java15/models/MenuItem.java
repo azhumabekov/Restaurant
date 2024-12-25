@@ -35,12 +35,10 @@ public class MenuItem {
     )
     List<Cheque> cheques;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "stop_list_id")
     StopList stopList;
 
-    @OneToMany(mappedBy = "menuItem")
+    @OneToMany(mappedBy = "menuItem", cascade = CascadeType.ALL, orphanRemoval = true)
     List<SubCategory> subCategories;
-
-
 }

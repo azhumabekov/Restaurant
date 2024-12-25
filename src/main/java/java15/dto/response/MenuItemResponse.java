@@ -1,5 +1,6 @@
 package java15.dto.response;
 
+import java15.models.MenuItem;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -12,4 +13,7 @@ public class MenuItemResponse {
     private int price;
     private String description;
     private boolean isVegetarian;
+
+    public MenuItemResponse(MenuItem menuItem) {
+    }
 }

@@ -2,6 +2,7 @@ package java15.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 @Data
@@ -15,4 +16,5 @@ public class EmployeeResponse {
     private String phoneNumber;
     private String role;
     private int experience;
+
 }

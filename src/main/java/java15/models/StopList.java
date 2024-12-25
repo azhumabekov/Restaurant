@@ -20,14 +20,7 @@ public class StopList {
     String reason;
     LocalDate date;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "menu_item_id")
     MenuItem menuItem;
-
-
-
-
-
-
-
 }

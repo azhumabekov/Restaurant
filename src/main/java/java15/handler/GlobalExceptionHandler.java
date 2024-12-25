@@ -2,15 +2,16 @@ package java15.handler;
 
 import java15.exceptions.InvalidInputException;
 import java15.exceptions.ResourceNotFoundException;
-import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDateTime;
 
-@RestControllerAdvice
+@RestController
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
@@ -18,7 +19,7 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(
                 LocalDateTime.now(),
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "Internal Server Error",
+                "Произошла ошибка: ",
                 e.getMessage()
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -60,4 +61,11 @@ public class GlobalExceptionHandler {
         }
 
     }
+
+    @ExceptionHandler(HttpMediaTypeNotAcceptableException.class)
+    public ResponseEntity<String> handleMediaTypeException(HttpMediaTypeNotAcceptableException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
+                .body("Неподдерживаемый тип данных: " + ex.getMessage());
+    }
+
 }

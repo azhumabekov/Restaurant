@@ -15,7 +15,6 @@ public class SubCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-
     String name;
 
     @ManyToOne
@@ -25,5 +24,4 @@ public class SubCategory {
     @ManyToOne
     @JoinColumn(name = "menu_item_id")
     MenuItem menuItem;
-
 }

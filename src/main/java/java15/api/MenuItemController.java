@@ -15,8 +15,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Tag(name = "MenuItem")
 public class MenuItemController {
-
-
     private final MenuItemService menuItemService;
 
     @GetMapping

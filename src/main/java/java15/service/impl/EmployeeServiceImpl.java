@@ -6,7 +6,6 @@ import java15.dto.request.ChangePasswordRequest;
 import java15.dto.request.RegistrationRequest;
 import java15.dto.response.AuthResponse;
 import java15.dto.response.EmployeeResponse;
-import java15.dto.response.SimpleResponse;
 import java15.enums.Role;
 import java15.models.Employee;
 import java15.models.Restaurant;
@@ -37,7 +36,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final JwtService jwtService;
 
     @Override
-    public void registerUser(RegistrationRequest request) {
+    public EmployeeResponse registerUser(RegistrationRequest request) {
         if (employeeRepository.findByEmail(request.getEmail()).isPresent()) {
             throw new RuntimeException("User with email already exists!");
         }
@@ -56,8 +55,24 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setRole(Role.WAITER);
         employee.setRestaurant(restaurant);
         employeeRepository.save(employee);
-        log.info("User with email {} registered successfully!", request.getEmail());
 
+        restaurant.setNumberOfEmployees(restaurant.getNumberOfEmployees() + 1);
+        restaurantRepository.save(restaurant);
+        log.info("User with email {} registered successfully!", request.getEmail());
+        return null;
+    }
+
+    // Добавление сотрудника
+    public Employee addEmployee(String firstName, String lastName, Long restaurantId) {
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new IllegalArgumentException("Restaurant not found"));
+
+        Employee employee = new Employee();
+        employee.setFirstName(firstName);
+        employee.setLastName(lastName);
+        employee.setRestaurant(restaurant);
+
+        return employeeRepository.save(employee);
     }
 
     @Override
@@ -67,66 +82,55 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (!passwordEncoder.matches(request.getOldPassword(), employee.getPassword())) {
             throw new RuntimeException("Old password is incorrect");
         }
-
         employee.setPassword(passwordEncoder.encode(request.getNewPassword()));
         employeeRepository.save(employee);
     }
 
-//    @Override
-//    public AuthResponse login(AuthRequest request) {
-//        if (employeeRepository.findByEmail(request.getEmail()).isPresent()) {
-//             SimpleResponse.builder()
-//                    .status(HttpStatus.BAD_REQUEST)
-//                    .message("kot")
-//                    .build();
-//        }
-//        Authentication authentication = authenticationProvider.authenticate(
-//                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-//        );
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
-//        Employee employee = (Employee) authentication.getPrincipal();
-//
-//        return AuthResponse.builder()
-//                .jwtTokenResponse(jwtService.createToken(employee))
-//                .email(employee.getEmail())
-//                .role(employee.getRole())
-//                .httpStatus(HttpStatus.OK)
-//                .build();
-//
-//    }
-@Override
-public AuthResponse login(AuthRequest request) {
-    Authentication authentication = authenticationProvider.authenticate(
-            new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-    );
-    SecurityContextHolder.getContext().setAuthentication(authentication);
-    Employee employee = (Employee) authentication.getPrincipal();
+    @Override
+    public AuthResponse login(AuthRequest request) {
+        Authentication authentication = authenticationProvider.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+        );
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        Employee employee = (Employee) authentication.getPrincipal();
 
-    return AuthResponse.builder()
-            .jwtTokenResponse(jwtService.createToken(employee))
-            .email(employee.getEmail())
-            .role(employee.getRole())
-            .httpStatus(HttpStatus.OK)
-            .build();
-
-}
+        return AuthResponse.builder()
+                .jwtTokenResponse(jwtService.createToken(employee))
+                .email(employee.getEmail())
+                .role(employee.getRole())
+                .httpStatus(HttpStatus.OK)
+                .build();
+    }
 
     @Override
     public List<EmployeeResponse> findAll() {
-//       return employeeRepository.findAll()
-//               .stream()
-//               .map(employee -> new EmployeeResponse(
-//                       employee.getId(),
-//                       employee.getFirstName(),
-//                       employee.getLastName(),
-//                       employee.getDateOfBirth(),
-//                       employee.getEmail(),
-//                       employee.getPhoneNumber(),
-//                       employee.getRole(),
-//                       employee.getExperience()
-//               )).collect(Collectors.toList());
-        return null;
+        return employeeRepository.findAll()
+                .stream()
+                .map(employee -> new EmployeeResponse(
+                        employee.getId(),
+                        employee.getFirstName(),
+                        employee.getLastName(),
+                        employee.getDateOfBirth(),
+                        employee.getEmail(),
+                        employee.getPhoneNumber(),
+                        String.valueOf(employee.getRole()),
+                        employee.getExperience()
+                )).collect(Collectors.toList());
+    }
 
+    @Override
+    public void removeEmployee(Long employeeId) {
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new IllegalArgumentException("Employee not found"));
+
+        Restaurant restaurant = employee.getRestaurant();
+
+        restaurant.setNumberOfEmployees(restaurant.getNumberOfEmployees() - 1);
+        restaurantRepository.save(restaurant);
+
+        employeeRepository.delete(employee);
+
+        log.info("Employee {} {} removed from restaurant {}", employee.getFirstName(), employee.getLastName(), restaurant.getName());
     }
 
 

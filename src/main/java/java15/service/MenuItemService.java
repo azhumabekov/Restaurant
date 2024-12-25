@@ -6,6 +6,7 @@ import java15.dto.response.MenuItemResponse;
 import java.util.List;
 
 public interface MenuItemService {
+
     List<MenuItemResponse> getAllMenuItems();
 
     MenuItemResponse getMenuItemById(Long id);

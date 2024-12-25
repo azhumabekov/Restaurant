@@ -4,8 +4,12 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java15.dto.request.RestaurantRequest;
 import java15.dto.response.RestaurantResponse;
+import java15.models.Restaurant;
 import java15.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,8 +37,14 @@ public class RestaurantController {
         return restaurantService.getAllRestaurants();
     }
 
+//    @GetMapping("/restaurants")
+//    @Operation(summary = "pageable")
+//    public Page<Restaurant> getRestaurants(@RequestParam(defaultValue = "0") int page,
+//                                           @RequestParam(defaultValue = "10") int size) {
+//        Pageable pageable = PageRequest.of(page, size);
+//        return restaurantService.getRestaurants(pageable);
+//    }
     @GetMapping("/{id}")
-
     public ResponseEntity<RestaurantResponse> getRestaurantById(@PathVariable Long id) {
         return ResponseEntity.ok(restaurantService.getRestaurantById(id));
     }

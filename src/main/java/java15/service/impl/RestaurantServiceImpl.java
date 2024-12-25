@@ -3,7 +3,9 @@ package java15.service.impl;
 import java15.dto.request.RestaurantRequest;
 import java15.dto.response.RestaurantResponse;
 import java15.exceptions.NotFoundException;
+import java15.models.Employee;
 import java15.models.Restaurant;
+import java15.repository.EmployeeRepository;
 import java15.repository.RestaurantRepository;
 import java15.service.RestaurantService;
 import lombok.AllArgsConstructor;
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
 public class RestaurantServiceImpl implements RestaurantService {
 
     private final RestaurantRepository restaurantRepository;
+    private final EmployeeRepository employeeRepository;
 
     @Override
     public RestaurantResponse createRestaurant(RestaurantRequest request) {
@@ -31,7 +34,6 @@ public class RestaurantServiceImpl implements RestaurantService {
         restaurant.setName(request.getName());
         restaurant.setLocation(request.getLocation());
         restaurant.setRestType(request.getRestType());
-        restaurant.setNumberOfEmployees(request.getNumberOfEmployees());
         restaurant.setService(request.getService());
 
         restaurantRepository.save(restaurant);
@@ -66,7 +68,6 @@ public class RestaurantServiceImpl implements RestaurantService {
         restaurant.setName(request.getName());
         restaurant.setLocation(request.getLocation());
         restaurant.setRestType(request.getRestType());
-        restaurant.setNumberOfEmployees(request.getNumberOfEmployees());
         restaurant.setService(request.getService());
 
         restaurantRepository.save(restaurant);
@@ -76,17 +77,21 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
-    public void deleteRestaurant(Long id) {
-        log.info("Удаление ресторана по ID: {}", id);
+    public void deleteRestaurant(Long restaurantId) {
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new IllegalArgumentException("Restaurant not found"));
 
-        if (!restaurantRepository.existsById(id)) {
-            log.error("Ресторан с ID {} не найден", id);
-            throw new NotFoundException("Restaurant not found with ID: " + id);
+        List<Employee> employees = employeeRepository.findByRestaurant(restaurant);
+
+        for (Employee employee : employees) {
+            employee.setRestaurant(null);
         }
 
+        employeeRepository.saveAll(employees);
 
-        restaurantRepository.deleteById(id);
-        log.info("Ресторан с ID {} успешно удалён", id);
+        restaurantRepository.delete(restaurant);
+
+        log.info("Restaurant {} has been removed. {} employees reassigned", restaurant.getName(), employees.size());
     }
 
     @Override

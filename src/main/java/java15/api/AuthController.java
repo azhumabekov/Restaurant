@@ -1,6 +1,5 @@
 package java15.api;
 
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -12,6 +11,7 @@ import java15.dto.response.AuthResponse;
 import java15.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -26,14 +26,14 @@ public class AuthController {
     private final AuthenticationProvider authenticationManager;
 
 
-    @Secured("ADMIN")
-    @PostMapping("/login")
+    //    @Secured("ADMIN")
+    @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "User login")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "Login successful"),
-//            @ApiResponse(responseCode = "404", description = "User not found"),
-//            @ApiResponse(responseCode = "401", description = "Incorrect password")
-//    })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Login successful"),
+            @ApiResponse(responseCode = "404", description = "User not found"),
+            @ApiResponse(responseCode = "401", description = "Incorrect password")
+    })
     public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request) {
         AuthResponse login = employeeService.login(request);
         return ResponseEntity.ok(login);
@@ -44,6 +44,7 @@ public class AuthController {
         employeeService.registerUser(request);
         return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully!");
     }
+
     @PatchMapping("/change-password")
     public ResponseEntity<String> changePassword(@RequestBody ChangePasswordRequest request) {
         employeeService.changePassword(request);

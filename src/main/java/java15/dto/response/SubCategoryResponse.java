@@ -12,6 +12,8 @@ import java.util.List;
 public class SubCategoryResponse {
     private Long id;
     private String name;
-    private List<MenuItemRequest> menuItems;
-    private CategoryRequest category;
+    private Long categoryId;
+    private Long menuItemId;
+//    private List<MenuItemRequest> menuItems;
+//    private CategoryRequest category;
 }

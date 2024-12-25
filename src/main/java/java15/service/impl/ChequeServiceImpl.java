@@ -2,8 +2,14 @@ package java15.service.impl;
 
 import java15.dto.request.ChequeRequest;
 import java15.dto.response.ChequeResponse;
+import java15.dto.response.MenuItemResponse;
 import java15.models.Cheque;
+import java15.models.Employee;
+import java15.models.MenuItem;
 import java15.models.Restaurant;
+import java15.repository.ChequeRepository;
+import java15.repository.EmployeeRepository;
+import java15.repository.MenuItemRepository;
 import java15.repository.RestaurantRepository;
 import java15.service.ChequeService;
 import java15.service.RestaurantService;
@@ -13,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -20,11 +27,23 @@ import java.util.List;
 public class ChequeServiceImpl implements ChequeService {
 
     private final RestaurantRepository restaurantRepository;
-
+    private final MenuItemRepository menuItemRepository;
+    private final ChequeRepository chequeRepository;
+    private final EmployeeRepository employeeRepository;
 
     @Override
     public List<ChequeResponse> getAllCheques() {
-        return List.of();
+        return chequeRepository.findAll()
+                .stream()
+                .map(cheque -> ChequeResponse.builder()
+                        .id(cheque.getId())
+                        .menuItems(cheque.getMenuItem().stream()
+                                .map(MenuItemResponse::new) // Assuming you have a MenuItemResponse class
+                                .collect(Collectors.toList()))
+                        .priceAverage(cheque.getPriceAverage())
+                        .createdAt(cheque.getCreatedAt())
+                        .build())
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -34,7 +53,19 @@ public class ChequeServiceImpl implements ChequeService {
 
     @Override
     public ChequeResponse createCheque(ChequeRequest request) {
-        return null;
+        Employee employee = employeeRepository.findById(request.getEmployeeId())
+                .orElseThrow(() -> new RuntimeException("Employee not found"));
+
+        List<MenuItem> menuItems = menuItemRepository.findAllById(request.getMeetingIds());
+        Cheque cheque = new Cheque();
+        cheque.setEmployee(employee);
+        cheque.setMenuItem(menuItems);
+        chequeRepository.save(cheque);
+        return  ChequeResponse.builder()
+                .id(cheque.getId())
+                .createdAt(cheque.getCreatedAt())
+                .priceAverage(cheque.getPriceAverage())
+                .build();
     }
 
     @Override
@@ -44,7 +75,9 @@ public class ChequeServiceImpl implements ChequeService {
 
     @Override
     public void deleteCheque(Long id) {
-
+        Cheque cheque = chequeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cheque not found"));
+        chequeRepository.delete(cheque);
     }
 
     @Override

@@ -23,12 +23,11 @@ public class Cheque {
     Long priceAverage;
     LocalDate createdAt;
 
-
     @ManyToOne
     @JoinColumn(name = "employee_id")
     Employee employee;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "cheque_menu_items",
             joinColumns = @JoinColumn(name = "cheque_id"),
@@ -40,6 +39,7 @@ public class Cheque {
     void setCreatedAt() {
         this.createdAt = LocalDate.now();
     }
+
     @PreUpdate
     void setUpdatedAt() {
         this.createdAt = LocalDate.now();

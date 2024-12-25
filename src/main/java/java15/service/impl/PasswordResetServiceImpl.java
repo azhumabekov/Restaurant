@@ -27,10 +27,9 @@ public class PasswordResetServiceImpl implements PasswordResetService {
         if (employee == null) {
             throw new IllegalArgumentException("Employee not found with email: " + email);
         }
-        // Проверяем, есть ли уже токен для этого пользователя
         PasswordResetToken existingToken = tokenRepository.findByEmployee(employee);
         if (existingToken != null) {
-            tokenRepository.delete(existingToken);  // Удаляем старый токен, если он существует
+            tokenRepository.delete(existingToken);
         }
 
         String token = UUID.randomUUID().toString();
@@ -39,10 +38,6 @@ public class PasswordResetServiceImpl implements PasswordResetService {
         resetToken.setEmployee(employee);
         resetToken.setExpirationTime(LocalDateTime.now().plusMinutes(15));
         tokenRepository.save(resetToken);
-
-        // Здесь вы можете отправить email с токеном
-        // Например: emailService.send(email, "Password reset token", "Your token is: " + token);
-
         return token;
     }
 
@@ -59,6 +54,6 @@ public class PasswordResetServiceImpl implements PasswordResetService {
         employee.setPassword(passwordEncoder.encode(newPassword));
         employeeRepository.save(employee);
 
-        tokenRepository.delete(resetToken); // Удаляем использованный токен
+        tokenRepository.delete(resetToken);
     }
 }

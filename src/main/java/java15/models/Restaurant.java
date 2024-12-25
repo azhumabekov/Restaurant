@@ -23,12 +23,14 @@ public class Restaurant {
     @Enumerated(EnumType.STRING)
     RestType restType;
 
+
     int numberOfEmployees;
+
     String service;
 
     @OneToMany(mappedBy = "restaurant")
     List<Employee> restaurant;
 
-    @OneToMany(mappedBy = "restaurant")
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
     List<MenuItem> menu;
 }

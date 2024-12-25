@@ -4,7 +4,9 @@ import java15.dto.request.CategoryRequest;
 import java15.dto.response.CategoryResponse;
 import java15.models.Category;
 import java15.repository.CategoryRepository;
+import java15.repository.SubCategoryRepository;
 import java15.service.CategoryService;
+import java15.service.SubCategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +17,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepo;
-
-
+    private final SubCategoryRepository subCategoryRepository;
 
     @Override
     public CategoryResponse createCategory(CategoryRequest request) {
@@ -42,7 +43,11 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void deleteCategory(Long id) {
+        Category category = categoryRepo.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Category not found"));
+        subCategoryRepository.deleteByCategory(category);
         categoryRepo.deleteById(id);
+
     }
 
     @Override

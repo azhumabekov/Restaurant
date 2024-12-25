@@ -9,13 +9,15 @@ import java15.dto.response.EmployeeResponse;
 import java.util.List;
 
 public interface EmployeeService {
-    void registerUser(RegistrationRequest request);
+    EmployeeResponse registerUser(RegistrationRequest request);
 
     void changePassword(ChangePasswordRequest request);
 
     AuthResponse login(AuthRequest request);
 
     List<EmployeeResponse> findAll();
+
+    void removeEmployee(Long employeeId);
 
 //    void updateEmployeeStatus(Long id, boolean isActive);
 }

@@ -1,5 +1,6 @@
 package java15.config.security;
 
+
 import java15.config.jwt.JwtFilter;
 import java15.repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ public class SecurityConfig {
             request
                     .requestMatchers(
                             "/**",
+                            "/api/**",
                             "/api/auth/*",
                             "/swagger-ui/index.html",
                             "/v3/api-docs",
