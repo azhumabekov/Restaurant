@@ -44,6 +44,7 @@ public class SubCategoryController {
         return ResponseEntity.ok(response);
     }
 
+
     @GetMapping
     @Operation(summary = "Get all subcategories")
     @ApiResponse(responseCode = "200", description = "List of SubCategories retrieved")

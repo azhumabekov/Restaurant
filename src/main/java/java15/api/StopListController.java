@@ -1,5 +1,7 @@
 package java15.api;
 
+import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import java15.dto.request.StopListRequest;
 import java15.dto.response.SimpleResponse;
 import java15.dto.response.StopListResponse;
@@ -20,31 +22,33 @@ public class StopListController {
 
     private final StopListService stopListService;
 
-    @Secured("ADMIN")
+    @Secured({"ADMIN", "CHEF", "WAITER"})
     @PostMapping
-    public StopListResponse create(@RequestBody StopListRequest stopListRequest) {
-        return stopListService.create(stopListRequest);
+    public ResponseEntity<StopListResponse> create(@RequestBody @Valid StopListRequest stopListRequest) {
+        StopListResponse stopListResponse = stopListService.create(stopListRequest);
+        return ResponseEntity.status(201).body(stopListResponse);
     }
-    @Secured("ADMIN")
+    @Secured({"ADMIN", "CHEF", "WAITER"})
     @GetMapping("/{id}")
-    public StopListResponse findById(@PathVariable Long id) {
-        return stopListService.findById(id);
+    public ResponseEntity<StopListResponse>  findById(@PathVariable Long id) {
+        return ResponseEntity.ok(stopListService.findById(id));
     }
     @Secured("ADMIN")
     @GetMapping
-    public List<StopListResponse> findAll() {
-        return stopListService.findAll();
+    public ResponseEntity<List<StopListResponse>> findAll() {
+        return ResponseEntity.ok(stopListService.findAll());
     }
     @Secured("ADMIN")
+    @Operation(summary = "updated'd")
     @PutMapping("/{id}")
-    public ResponseEntity<String> update(@PathVariable Long id, @RequestBody StopListRequest stopListRequest) {
-        stopListService.update(id, stopListRequest);
-        return ResponseEntity.ok("Stop list updated successfully");
+    public ResponseEntity<StopListResponse> update(@PathVariable Long id, @RequestBody @Valid StopListRequest stopListRequest) {
+        StopListResponse updatedResponse = stopListService.update(id, stopListRequest);
+        return ResponseEntity.ok(updatedResponse);
     }
-    @Secured("ADMIN")
+    @Secured({"ADMIN", "CHEF"})
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         stopListService.delete(id);
-        return ResponseEntity.ok("Stop list deleted successfully");
+        return ResponseEntity.noContent().build();
     }
 }

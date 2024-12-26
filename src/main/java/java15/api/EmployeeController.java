@@ -2,7 +2,6 @@ package java15.api;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java15.dto.response.EmployeeResponse;
-import java15.models.Employee;
 import java15.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -26,9 +25,9 @@ public class EmployeeController {
     }
 
     @Secured("ADMIN")
-    @DeleteMapping
-    public ResponseEntity<String> delete(@RequestBody Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> delete(@PathVariable Long id) {
         employeeService.removeEmployee(id);
-        return ResponseEntity.ok("Employee deleted");
+        return ResponseEntity.ok("Employee deleted successfully");
     }
 }

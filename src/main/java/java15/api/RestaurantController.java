@@ -2,6 +2,7 @@ package java15.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import java15.dto.request.RestaurantRequest;
 import java15.dto.response.RestaurantResponse;
 import java15.models.Restaurant;
@@ -57,14 +58,14 @@ public class RestaurantController {
     @PutMapping("/{id}")
     public ResponseEntity<RestaurantResponse> updateRestaurant(
             @PathVariable Long id,
-            @RequestBody RestaurantRequest request) {
+            @RequestBody @Valid RestaurantRequest request) {
         return ResponseEntity.ok(restaurantService.updateRestaurant(id, request));
     }
 
     @Secured("ADMIN")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteRestaurant(@PathVariable Long id) {
+    public ResponseEntity<String> deleteRestaurant(@PathVariable Long id) {
         restaurantService.deleteRestaurant(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("Restaurant deleted");
     }
 }

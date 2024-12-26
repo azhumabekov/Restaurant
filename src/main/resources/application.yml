@@ -25,9 +25,9 @@ app:
       secret_key: java15java
       expiration: 3600
 
-logging:
-  level:
-    org:springframework.security: DEBUG
+#logging:
+#  level:
+#    org:springframework.security: DEBUG
 #debug: true
 
 #springdoc:

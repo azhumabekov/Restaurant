@@ -12,7 +12,7 @@ public interface StopListService {
 
     List<StopListResponse> findAll();
 
-    void update(Long id, StopListRequest stopListRequest);
+    StopListResponse update(Long id, StopListRequest stopListRequest);
 
     void delete(Long id);
 

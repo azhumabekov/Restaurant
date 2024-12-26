@@ -3,6 +3,7 @@ package java15.service.impl;
 import java15.dto.request.ChequeRequest;
 import java15.dto.response.ChequeResponse;
 import java15.dto.response.MenuItemResponse;
+import java15.exceptions.ResourceNotFoundException;
 import java15.models.Cheque;
 import java15.models.Employee;
 import java15.models.MenuItem;
@@ -48,7 +49,9 @@ public class ChequeServiceImpl implements ChequeService {
 
     @Override
     public ChequeResponse getChequeById(Long id) {
-        return null;
+        return chequeRepository.findById(id)
+                .map(entity -> mapToResponse(entity))
+                .orElseThrow(() -> new ResourceNotFoundException("Cheque not found for ID: " + id));
     }
 
     @Override

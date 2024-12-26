@@ -1,5 +1,6 @@
 package java15.service.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import java15.dto.request.MenuItemRequest;
 import java15.dto.response.MenuItemResponse;
 import java15.service.MenuItemService;
@@ -27,9 +28,21 @@ public class MenuItemServiceImpl implements MenuItemService {
 
     @Override
     public MenuItemResponse getMenuItemById(Long id) {
-        MenuItem menuItem = menuItemRepository.findById(id).orElseThrow();
-        return new MenuItemResponse(menuItem.getId(), menuItem.getName(), menuItem.getImageUrl(),
-                menuItem.getPrice(), menuItem.getDescription(), menuItem.isVegetarian());
+        if (id == null || id <= 0) {
+            throw new IllegalArgumentException("Invalid ID: " + id);
+        }
+
+        MenuItem menuItem = menuItemRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("MenuItem with ID " + id + " not found"));
+
+        return new MenuItemResponse(
+                menuItem.getId(),
+                menuItem.getName(),
+                menuItem.getImageUrl(),
+                menuItem.getPrice(),
+                menuItem.getDescription(),
+                menuItem.isVegetarian()
+        );
     }
 
     @Override

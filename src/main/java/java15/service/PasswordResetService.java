@@ -1,7 +1,9 @@
 package java15.service;
 
+import java15.dto.request.ResetPasswordRequest;
+
 public interface PasswordResetService {
     String generateResetToken(String email);
 
-    void resetPassword(String token, String newPassword);
+    void resetPassword(ResetPasswordRequest resetPasswordRequest);
 }

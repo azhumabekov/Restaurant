@@ -4,18 +4,18 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import java15.dto.request.AuthRequest;
 import java15.dto.request.ChangePasswordRequest;
 import java15.dto.request.RegistrationRequest;
+import java15.dto.request.ResetPasswordRequest;
 import java15.dto.response.AuthResponse;
 import java15.service.EmployeeService;
+import java15.service.PasswordResetService;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,32 +24,49 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AuthController {
     private final EmployeeService employeeService;
+    private final PasswordResetService passwordResetService;
 
-    //    @Secured("ADMIN")
-//    @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "User login")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Login successful"),
             @ApiResponse(responseCode = "404", description = "User not found"),
             @ApiResponse(responseCode = "401", description = "Incorrect password")
     })
-    @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request) {
+    public ResponseEntity<AuthResponse> login(@RequestBody @Valid AuthRequest request) {
         AuthResponse response = employeeService.login(request);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody RegistrationRequest request) {
+    public ResponseEntity<String> registerUser(@RequestBody @Valid RegistrationRequest request) {
         employeeService.registerUser(request);
         return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully!");
     }
 
+    @Operation(summary = "Change password")
     @PatchMapping("/change-password")
-    public ResponseEntity<String> changePassword(@RequestBody ChangePasswordRequest request) {
+    public ResponseEntity<String> changePassword(@RequestBody @Valid ChangePasswordRequest request) {
         employeeService.changePassword(request);
         return ResponseEntity.ok("Password changed successfully!");
     }
+
+    @Operation(summary = "Reset password, end to generated token")
+    @PostMapping("/generate-reset-token")
+    public ResponseEntity<String> generateResetToken(@RequestParam String email) {
+        passwordResetService.generateResetToken(email);
+        return ResponseEntity.ok("Reset token generated successfully!");
+    }
+
+    @Operation(summary = "enter the token and reset password")
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestBody @Valid ResetPasswordRequest request) {
+        // Assuming the service performs the business logic and any necessary validations
+        passwordResetService.resetPassword(request);
+        return ResponseEntity.ok("Password reset successfully!");
+    }
+
+
 
 //    @PatchMapping("/{id}/status")
 //    public ResponseEntity<String> updateEmployeeStatus(@PathVariable Long id, @RequestParam boolean isActive) {

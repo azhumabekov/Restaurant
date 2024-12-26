@@ -23,6 +23,8 @@ public class MenuItem {
     String description;
     boolean isVegetarian;
 
+    boolean isAvailable = true;
+
     @ManyToOne
     @JoinColumn(name = "restaurant_id")
     Restaurant restaurant;

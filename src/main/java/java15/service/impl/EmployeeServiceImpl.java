@@ -7,6 +7,7 @@ import java15.dto.request.RegistrationRequest;
 import java15.dto.response.AuthResponse;
 import java15.dto.response.EmployeeResponse;
 import java15.enums.Role;
+import java15.exceptions.InvalidPasswordException;
 import java15.models.Employee;
 import java15.models.Restaurant;
 import java15.repository.EmployeeRepository;
@@ -51,7 +52,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setPhoneNumber(request.getPhoneNumber());
         employee.setDateOfBirth(request.getDateOfBirth());
         employee.setExperience(request.getExperience());
-        employee.setRole(Role.WAITER);
+        employee.setRole(Role.USER);
         employee.setRestaurant(restaurant);
         employeeRepository.save(employee);
 
@@ -78,7 +79,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void changePassword(ChangePasswordRequest request) {
         Employee employee = employeeRepository.findUserByEmailEqualsIgnoreCase(request.getEmail());
 
-        if (!passwordEncoder.matches(request.getOldPassword(), employee.getPassword())) {
+        if (!passwordEncoder.matches(request.getCurrentPassword(), employee.getPassword())) {
             throw new RuntimeException("Old password is incorrect");
         }
         employee.setPassword(passwordEncoder.encode(request.getNewPassword()));
@@ -104,11 +105,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public AuthResponse login(AuthRequest request) {
-        // Ищем пользователя в базе данных по email
         Employee employee = (Employee) employeeRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        // Проверяем, совпадает ли пароль
+        if (!isPasswordCorrect(request)) {
+            throw new InvalidPasswordException("Incorrect password for user " + request.getEmail());
+        }
         if (!passwordEncoder.matches(request.getPassword(), employee.getPassword())) {
             throw new BadCredentialsException("Incorrect password");
         }
@@ -119,6 +121,11 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .role(employee.getRole())
                 .httpStatus(HttpStatus.OK)
                 .build();
+    }
+
+    private boolean isPasswordCorrect(AuthRequest request) {
+
+        return true;
     }
 //@Override
 //public AuthResponse login(AuthRequest request) {
@@ -166,6 +173,23 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeRepository.delete(employee);
 
         log.info("Employee {} {} removed from restaurant {}", employee.getFirstName(), employee.getLastName(), restaurant.getName());
+    }
+
+    @Override
+    public EmployeeResponse getEmployeeById(Long employeeId) {
+        log.info("Get employee by ID {}", employeeId);
+
+        Employee employee = employeeRepository.findById(employeeId).orElseThrow(() -> new IllegalArgumentException("Employee not found"));
+        return new EmployeeResponse(
+                employee.getId(),
+                employee.getFirstName(),
+                employee.getLastName(),
+                employee.getDateOfBirth(),
+                employee.getEmail(),
+                employee.getPhoneNumber(),
+                employee.getRole().toString(),
+                employee.getExperience()
+        );
     }
 
 

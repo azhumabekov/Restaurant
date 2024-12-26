@@ -1,5 +1,6 @@
 package java15.service.impl;
 
+import java15.dto.request.ResetPasswordRequest;
 import java15.models.Employee;
 import java15.models.PasswordResetToken;
 import java15.repository.EmployeeRepository;
@@ -42,8 +43,8 @@ public class PasswordResetServiceImpl implements PasswordResetService {
     }
 
     @Override
-    public void resetPassword(String token, String newPassword) {
-        PasswordResetToken resetToken = tokenRepository.findByToken(token)
+    public void resetPassword(ResetPasswordRequest request) {
+        PasswordResetToken resetToken = tokenRepository.findByToken(request.getToken())
                 .orElseThrow(() -> new RuntimeException("Invalid or expired token"));
 
         if (resetToken.getExpirationTime().isBefore(LocalDateTime.now())) {
@@ -51,7 +52,7 @@ public class PasswordResetServiceImpl implements PasswordResetService {
         }
 
         Employee employee = resetToken.getEmployee();
-        employee.setPassword(passwordEncoder.encode(newPassword));
+        employee.setPassword(passwordEncoder.encode(request.getNewPassword()));
         employeeRepository.save(employee);
 
         tokenRepository.delete(resetToken);

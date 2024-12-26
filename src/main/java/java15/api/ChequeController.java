@@ -1,6 +1,9 @@
 package java15.api;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import java15.dto.request.ChequeRequest;
 import java15.dto.response.ChequeResponse;
 import java15.service.ChequeService;
@@ -26,6 +29,8 @@ public class ChequeController {
     }
 
     @Secured("ADMIN")
+    @Operation(summary = "Get cheque by ID", description = "Retrieve a specific cheque by its ID")
+    @Parameter(name = "id", description = "ID of the cheque", required = true)
     @GetMapping("/{id}")
     public ResponseEntity<ChequeResponse> getChequeById(@PathVariable Long id) {
         return ResponseEntity.ok(chequeService.getChequeById(id));
@@ -33,14 +38,15 @@ public class ChequeController {
 
     @Secured("ADMIN")
     @PostMapping
-    public ResponseEntity<ChequeResponse> createCheque(@RequestBody ChequeRequest request) {
+    public ResponseEntity<ChequeResponse> createCheque(@RequestBody @Valid ChequeRequest request) {
         return ResponseEntity.status(201).body(chequeService.createCheque(request));
     }
 
     @Secured("ADMIN")
     @PutMapping("/{id}")
-    public ResponseEntity<ChequeResponse> updateCheque(@PathVariable Long id, @RequestBody ChequeRequest request) {
-        return ResponseEntity.ok(chequeService.updateCheque(id, request));
+    public ResponseEntity<Void> updateCheque(@PathVariable Long id, @RequestBody @Valid ChequeRequest request) {
+        chequeService.updateCheque(id, request);
+        return ResponseEntity.noContent().build();
     }
 
     @Secured("ADMIN")

@@ -3,7 +3,9 @@ package java15.service.impl;
 import jakarta.persistence.EntityNotFoundException;
 import java15.dto.request.StopListRequest;
 import java15.dto.response.StopListResponse;
+import java15.models.MenuItem;
 import java15.models.StopList;
+import java15.repository.MenuItemRepository;
 import java15.repository.StopListRepository;
 import java15.service.StopListService;
 import lombok.RequiredArgsConstructor;
@@ -20,18 +22,23 @@ import java.util.stream.Collectors;
 public class StopListServiceImpl implements StopListService {
 
     private final StopListRepository stopListRepository;
+    private final MenuItemRepository menuItemRepository;
 
     @Override
     public StopListResponse create(StopListRequest stopListRequest) {
+        if (stopListRepository.existsById(stopListRequest.getMenuItemId())) {
+            throw new RuntimeException("Menu item is already in the stop list");
+        }
         log.info("Creating stop list with reason: {}", stopListRequest.getReason());
 
-        if (stopListRequest == null || stopListRequest.getReason() == null || stopListRequest.getReason().isEmpty()) {
-            log.error("Invalid StopListRequest: reason is empty or null");
-            throw new IllegalArgumentException("Reason cannot be null or empty");
-        }
+        MenuItem menuItem = menuItemRepository.findById(stopListRequest.getMenuItemId())
+                .orElseThrow(() -> new EntityNotFoundException("MenuItem not found"));
+        menuItem.setAvailable(false); //пометить недоступным
+        menuItemRepository.save(menuItem);
 
         StopList stopList = new StopList();
         stopList.setReason(stopListRequest.getReason());
+        stopList.setMenuItem(menuItem);
         stopListRepository.save(stopList);
 
         log.info("Created stop list: {}", stopList);
@@ -39,6 +46,7 @@ public class StopListServiceImpl implements StopListService {
         return StopListResponse.builder()
                 .id(stopList.getId())
                 .reason(stopList.getReason())
+                .menuItemId(stopList.getMenuItem().getId())
                 .build();
     }
 
@@ -69,7 +77,7 @@ public class StopListServiceImpl implements StopListService {
     }
 
     @Override
-    public void update(Long id, StopListRequest stopListRequest) {
+    public StopListResponse update(Long id, StopListRequest stopListRequest) {
         log.info("Updating stop list with id {}", id);
 
         if (!stopListRepository.existsById(id)) {
@@ -82,18 +90,20 @@ public class StopListServiceImpl implements StopListService {
         stopListRepository.save(stopList);
 
         log.info("Updated stop list: {}", stopList);
+        return null;
     }
 
     @Override
     public void delete(Long id) {
         log.info("Deleting stop list with id {}", id);
 
-        if (!stopListRepository.existsById(id)) {
-            log.error("StopList not found with id {}", id);
-            throw new EntityNotFoundException("StopList not found with id " + id);
-        }
+        StopList stopList = stopListRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("StopList not found with id " + id));
+        stopListRepository.delete(stopList);
 
-        stopListRepository.deleteById(id);
+        stopList.getMenuItem().setAvailable(true);
+        menuItemRepository.save(stopList.getMenuItem());
+
         log.info("Deleted stop list with id {}", id);
     }
 }

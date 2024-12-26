@@ -1,6 +1,7 @@
 package java15.api;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import java15.dto.request.CategoryRequest;
 import java15.dto.response.CategoryResponse;
 import java15.service.CategoryService;
@@ -31,12 +32,12 @@ public class CategoryController {
     }
     @Secured("ADMIN")
     @PostMapping
-    public ResponseEntity<CategoryResponse> createCategory(@RequestBody CategoryRequest request) {
+    public ResponseEntity<CategoryResponse> createCategory(@RequestBody @Valid CategoryRequest request) {
         return ResponseEntity.status(201).body(categoryService.createCategory(request));
     }
     @Secured("ADMIN")
     @PutMapping("/{id}")
-    public ResponseEntity<CategoryResponse> updateCategory(@PathVariable Long id, @RequestBody CategoryRequest request) {
+    public ResponseEntity<CategoryResponse> updateCategory(@PathVariable Long id, @RequestBody @Valid CategoryRequest request) {
         return ResponseEntity.ok(categoryService.updateCategory(id, request));
     }
     @Secured("ADMIN")

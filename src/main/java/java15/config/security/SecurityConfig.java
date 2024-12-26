@@ -32,10 +32,8 @@ public class SecurityConfig {
         http.authorizeHttpRequests(request -> {
             request
                     .requestMatchers(
-                            "/**",
-                            "/api/**",
-                            "/api/auth/*",
-                            "/swagger-ui/index.html",
+                            "/api/auth/**",
+                            "/swagger-ui/**",
                             "/v3/api-docs",
                             "/swagger-resources/**"
                     )
@@ -46,7 +44,7 @@ public class SecurityConfig {
         });
         http.csrf(AbstractHttpConfigurer::disable);
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-//        http.httpBasic(Customizer.withDefaults());
+//      http.httpBasic(Customizer.withDefaults());
         return http.build();
     }
 

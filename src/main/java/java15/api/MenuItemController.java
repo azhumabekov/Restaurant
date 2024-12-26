@@ -1,6 +1,7 @@
 package java15.api;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import java15.dto.request.MenuItemRequest;
 import java15.dto.response.MenuItemResponse;
 import java15.service.MenuItemService;
@@ -18,6 +19,7 @@ import java.util.List;
 public class MenuItemController {
     private final MenuItemService menuItemService;
 
+    @Secured({"ADMIN", "WAITER", "CHEF"})
     @GetMapping
     public List<MenuItemResponse> getAllMenuItems() {
         return menuItemService.getAllMenuItems();
@@ -29,9 +31,9 @@ public class MenuItemController {
         return ResponseEntity.ok(menuItemService.getMenuItemById(id));
     }
 
-    @Secured("WAITER, ADMIN")
+    @Secured({"WAITER", "ADMIN"})
     @PostMapping
-    public ResponseEntity<MenuItemResponse> createMenuItem(@RequestBody MenuItemRequest menuItemRequest) {
+    public ResponseEntity<MenuItemResponse> createMenuItem(@RequestBody @Valid MenuItemRequest menuItemRequest) {
         return ResponseEntity.ok(menuItemService.createMenuItem(menuItemRequest));
     }
 

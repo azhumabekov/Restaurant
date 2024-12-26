@@ -10,6 +10,7 @@ import java15.models.Employee;
 import java.util.List;
 
 public interface EmployeeService {
+
     EmployeeResponse registerUser(RegistrationRequest request);
 
     Employee addEmployee(String firstName, String lastName, Long restaurantId);
@@ -21,6 +22,8 @@ public interface EmployeeService {
     List<EmployeeResponse> findAll();
 
     void removeEmployee(Long employeeId);
+
+    EmployeeResponse getEmployeeById(Long employeeId);
 
 //    void updateEmployeeStatus(Long id, boolean isActive);
 }
