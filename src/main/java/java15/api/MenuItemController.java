@@ -1,5 +1,8 @@
 package java15.api;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java15.dto.request.MenuItemRequest;
@@ -32,6 +35,16 @@ public class MenuItemController {
     }
 
     @Secured({"WAITER", "ADMIN"})
+    @Operation(
+            summary = "Создание нового элемента меню",
+            description = "Добавляет новый элемент меню. Требуется роль ADMIN или MANAGER."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Элемент меню успешно создан"),
+            @ApiResponse(responseCode = "400", description = "Неверные данные в запросе"),
+            @ApiResponse(responseCode = "404", description = "Категория или другой ресурс не найден"),
+            @ApiResponse(responseCode = "500", description = "Внутренняя ошибка сервера")
+    })
     @PostMapping
     public ResponseEntity<MenuItemResponse> createMenuItem(@RequestBody @Valid MenuItemRequest menuItemRequest) {
         return ResponseEntity.ok(menuItemService.createMenuItem(menuItemRequest));

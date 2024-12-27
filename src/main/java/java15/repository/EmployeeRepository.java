@@ -18,4 +18,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     List<Employee> findByRestaurant(Restaurant restaurant);
 
     List<Employee> findEmployeeById(Long id);
+
+    boolean existsByEmail(String email);
 }

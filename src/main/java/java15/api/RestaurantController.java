@@ -5,12 +5,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java15.dto.request.RestaurantRequest;
 import java15.dto.response.RestaurantResponse;
-import java15.models.Restaurant;
 import java15.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -30,7 +26,7 @@ public class RestaurantController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "create Restaurant")
-    public ResponseEntity<RestaurantResponse> createRestaurant(@RequestBody RestaurantRequest request) {
+    public ResponseEntity<RestaurantResponse> createRestaurant(@RequestBody @Valid RestaurantRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(restaurantService.createRestaurant(request));
     }
 

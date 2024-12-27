@@ -1,5 +1,6 @@
 package java15.service.impl;
 
+import jakarta.validation.ValidationException;
 import java15.dto.request.RestaurantRequest;
 import java15.dto.response.RestaurantResponse;
 import java15.exceptions.NotFoundException;
@@ -25,8 +26,8 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public RestaurantResponse createRestaurant(RestaurantRequest request) {
-        if (request.getName() == null || request.getName().isEmpty()) {
-            log.error("Restaurant name cannot be empty");
+        if (request.getName() == null || request.getLocation() == null) {
+            throw new ValidationException("Название и локация ресторана обязательны");
         }
         log.info("Создание нового ресторана: {}", request);
 

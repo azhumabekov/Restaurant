@@ -39,7 +39,13 @@ public class ChequeServiceImpl implements ChequeService {
                 .map(cheque -> ChequeResponse.builder()
                         .id(cheque.getId())
                         .menuItems(cheque.getMenuItem().stream()
-                                .map(MenuItemResponse::new) // Assuming you have a MenuItemResponse class
+                                .map(menuItem -> new MenuItemResponse(
+                                        menuItem.getId(),
+                                        menuItem.getName(),
+                                        menuItem.getDescription(),
+                                        menuItem.getPrice(),
+                                        menuItem.getImageUrl(),
+                                        menuItem.isAvailable()))
                                 .collect(Collectors.toList()))
                         .priceAverage(cheque.getPriceAverage())
                         .createdAt(cheque.getCreatedAt())
@@ -49,17 +55,16 @@ public class ChequeServiceImpl implements ChequeService {
 
     @Override
     public ChequeResponse getChequeById(Long id) {
-        return chequeRepository.findById(id)
-                .map(entity -> mapToResponse(entity))
+        Cheque cheque = chequeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Cheque not found for ID: " + id));
+        return mapToChequeResponse(cheque);
     }
-
     @Override
     public ChequeResponse createCheque(ChequeRequest request) {
         Employee employee = employeeRepository.findById(request.getEmployeeId())
                 .orElseThrow(() -> new RuntimeException("Employee not found"));
 
-        List<MenuItem> menuItems = menuItemRepository.findAllById(request.getMeetingIds());
+        List<MenuItem> menuItems = menuItemRepository.findAllById(request.getMenuItemIds());
         Cheque cheque = new Cheque();
         cheque.setEmployee(employee);
         cheque.setMenuItem(menuItems);
@@ -98,5 +103,15 @@ public class ChequeServiceImpl implements ChequeService {
                 .orElse(0.0);
         return "Средняя цена: " + averagePrice + " сом.";
 
+    }
+    private ChequeResponse mapToChequeResponse(Cheque cheque) {
+
+        return ChequeResponse.builder()
+                .id(cheque.getId())
+                .restaurantId(cheque.getEmployee().getRestaurant().getId())
+                .employeeId(cheque.getEmployee().getId())
+                .createdAt(cheque.getCreatedAt())
+                .priceAverage(cheque.getPriceAverage())
+                .build();
     }
 }

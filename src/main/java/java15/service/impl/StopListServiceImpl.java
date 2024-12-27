@@ -90,7 +90,12 @@ public class StopListServiceImpl implements StopListService {
         stopListRepository.save(stopList);
 
         log.info("Updated stop list: {}", stopList);
-        return null;
+        return StopListResponse.
+                builder()
+                .id(stopList.getId())
+                .reason(stopList.getReason())
+                .menuItemId(stopList.getMenuItem().getId())
+                .build();
     }
 
     @Override

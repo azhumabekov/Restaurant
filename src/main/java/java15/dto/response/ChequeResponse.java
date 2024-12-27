@@ -10,7 +10,10 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class ChequeResponse {
+
     private Long id;
+    private Long restaurantId;
+    private Long employeeId;
     private Long priceAverage;
     private LocalDate createdAt;
     private List<MenuItemResponse> menuItems;

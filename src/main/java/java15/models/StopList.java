@@ -20,7 +20,7 @@ public class StopList {
     String reason;
     LocalDate date;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "menu_item_id")
     MenuItem menuItem;
 }

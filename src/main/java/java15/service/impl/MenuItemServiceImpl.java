@@ -60,6 +60,9 @@ public class MenuItemServiceImpl implements MenuItemService {
 
     @Override
     public void deleteMenuItem(Long id) {
+        if (!menuItemRepository.existsById(id)) {
+            throw new EntityNotFoundException("MenuItem с ID " + id + " не существует");
+        }
         menuItemRepository.deleteById(id);
     }
 }

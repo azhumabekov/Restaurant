@@ -37,7 +37,7 @@ public class MenuItem {
     )
     List<Cheque> cheques;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "stop_list_id")
     StopList stopList;
 

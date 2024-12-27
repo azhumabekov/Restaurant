@@ -8,6 +8,7 @@ import java15.dto.response.AuthResponse;
 import java15.dto.response.EmployeeResponse;
 import java15.enums.Role;
 import java15.exceptions.InvalidPasswordException;
+import java15.exceptions.UserAlreadyExistsException;
 import java15.models.Employee;
 import java15.models.Restaurant;
 import java15.repository.EmployeeRepository;
@@ -16,7 +17,6 @@ import java15.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,17 +32,20 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final PasswordEncoder passwordEncoder;
     private final RestaurantRepository restaurantRepository;
-    private final AuthenticationProvider authenticationProvider;
     private final JwtService jwtService;
 
     @Override
     public EmployeeResponse registerUser(RegistrationRequest request) {
-        if (employeeRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new RuntimeException("User with email already exists!");
+        if (employeeRepository.existsByEmail(request.getEmail())) {
+            throw new UserAlreadyExistsException("A user with this email address already exists");
         }
         Restaurant restaurant = restaurantRepository.findById(request.getRestaurantId())
                 .orElseThrow(() ->
                         new IllegalArgumentException("Restaurant not found with ID: " + request.getRestaurantId()));
+
+        if (restaurant.getNumberOfEmployees() >= 15) {
+            new RuntimeException("Restaurant cannot have than 15 employees");
+        }
 
         Employee employee = new Employee();
         employee.setFirstName(request.getFirstName());
@@ -59,7 +62,25 @@ public class EmployeeServiceImpl implements EmployeeService {
         restaurant.setNumberOfEmployees(restaurant.getNumberOfEmployees() + 1);
         restaurantRepository.save(restaurant);
         log.info("User with email {} registered successfully!", request.getEmail());
-        return null;
+        return new EmployeeResponse(
+                employee.getId(),
+                employee.getFirstName(),
+                employee.getLastName(),
+                employee.getDateOfBirth(),
+                employee.getEmail(),
+                employee.getPhoneNumber(),
+                employee.getRole().toString(),
+                employee.getExperience());
+    }
+
+    @Override
+    public void approveEmployeeRole(Long employeeId, Role newRole) {
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new IllegalArgumentException("Employee not found"));
+        employee.setRole(newRole);
+        employeeRepository.save(employee);
+        log.info("Employee {} {} role has been changed to {}", employee.getFirstName(), employee.getLastName(), newRole);
+
     }
 
     @Override
