@@ -26,6 +26,10 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public RestaurantResponse createRestaurant(RestaurantRequest request) {
+        if (restaurantRepository.existsByName(request.getName()) &&
+                restaurantRepository.existsByLocation(request.getLocation())) {
+            throw new ValidationException("Точно такой ресторан с таким адресом уже существует");
+        }
         if (request.getName() == null || request.getLocation() == null) {
             throw new ValidationException("Название и локация ресторана обязательны");
         }

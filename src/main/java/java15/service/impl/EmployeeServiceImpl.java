@@ -1,5 +1,6 @@
 package java15.service.impl;
 
+import jakarta.annotation.PostConstruct;
 import java15.config.jwt.JwtService;
 import java15.dto.request.AuthRequest;
 import java15.dto.request.ChangePasswordRequest;
@@ -37,7 +38,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeResponse registerUser(RegistrationRequest request) {
         if (employeeRepository.existsByEmail(request.getEmail())) {
-            throw new UserAlreadyExistsException("A user with this email address already exists");
+            throw new UserAlreadyExistsException("A user with this email address");
         }
         Restaurant restaurant = restaurantRepository.findById(request.getRestaurantId())
                 .orElseThrow(() ->

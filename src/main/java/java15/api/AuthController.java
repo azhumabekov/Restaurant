@@ -10,6 +10,10 @@ import java15.dto.request.ChangePasswordRequest;
 import java15.dto.request.RegistrationRequest;
 import java15.dto.request.ResetPasswordRequest;
 import java15.dto.response.AuthResponse;
+import java15.models.Employee;
+import java15.models.PasswordResetToken;
+import java15.repository.EmployeeRepository;
+import java15.repository.PasswordResetTokenRepository;
 import java15.service.EmployeeService;
 import java15.service.PasswordResetService;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +22,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+
 @RestController
 @RequestMapping("/api/auth")
 @Tag(name = "Authentication", description = "Endpoints for authentication and user management")
@@ -25,6 +31,8 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
     private final EmployeeService employeeService;
     private final PasswordResetService passwordResetService;
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
+    private final EmployeeRepository employeeRepository;
 
     @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "User login")
@@ -54,19 +62,32 @@ public class AuthController {
     @Operation(summary = "Reset password, end to generated token")
     @PostMapping("/generate-reset-token")
     public ResponseEntity<String> generateResetToken(@RequestParam String email) {
-        passwordResetService.generateResetToken(email);
-        return ResponseEntity.ok("Reset token generated successfully!");
+        String token = passwordResetService.generateResetToken(email);
+        return ResponseEntity.ok(token);
     }
 
     @Operation(summary = "enter the token and reset password")
     @PostMapping("/reset-password")
     public ResponseEntity<String> resetPassword(@RequestBody @Valid ResetPasswordRequest request) {
-        // Assuming the service performs the business logic and any necessary validations
         passwordResetService.resetPassword(request);
         return ResponseEntity.ok("Password reset successfully!");
     }
 
-
+//    @PostMapping("/forgot-password")
+//    public ResponseEntity<String> resetPassword(@RequestParam String token, @RequestParam String newPassword) {
+//        PasswordResetToken resetToken = passwordResetTokenRepository.findByToken(token)
+//                .orElseThrow(() -> new IllegalArgumentException("Invalid token"));
+//
+//        if (resetToken.getExpirationTime().isBefore(LocalDateTime.now())) {
+//            throw new IllegalArgumentException("Token has expired");
+//        }
+//
+//        Employee user = resetToken.getEmployee();
+//        user.setPassword(newPassword); // Не забудьте хэшировать пароль!
+//        employeeRepository.save(user);
+//
+//        return ResponseEntity.ok("Password reset successful");
+//    }
 
 //    @PatchMapping("/{id}/status")
 //    public ResponseEntity<String> updateEmployeeStatus(@PathVariable Long id, @RequestParam boolean isActive) {

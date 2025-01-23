@@ -29,6 +29,7 @@ public class MenuItemController {
     }
 
 
+    @Secured({"WAITER", "ADMIN"})
     @GetMapping("/{id}")
     public ResponseEntity<MenuItemResponse> getMenuItemById(@PathVariable Long id) {
         return ResponseEntity.ok(menuItemService.getMenuItemById(id));
@@ -37,7 +38,7 @@ public class MenuItemController {
     @Secured({"WAITER", "ADMIN"})
     @Operation(
             summary = "Создание нового элемента меню",
-            description = "Добавляет новый элемент меню. Требуется роль ADMIN или MANAGER."
+            description = "Добавляет новый элемент меню. Требуется роль ADMIN."
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Элемент меню успешно создан"),

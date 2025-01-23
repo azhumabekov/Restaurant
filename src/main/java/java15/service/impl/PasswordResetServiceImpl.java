@@ -57,4 +57,5 @@ public class PasswordResetServiceImpl implements PasswordResetService {
 
         tokenRepository.delete(resetToken);
     }
+
 }

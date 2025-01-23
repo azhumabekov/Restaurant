@@ -7,13 +7,13 @@ import java.time.LocalDate;
 @Data
 public class RegistrationRequest {
     @NotBlank(message = "First name is required")
-    @Size(max = 50, message = "First name cannot exceed 50 characters")
+    @Size(max = 15, message = "First name cannot exceed 50 characters")
     private String firstName;
     @NotBlank(message = "Last name is required")
-    @Size(max = 50, message = "Last name cannot exceed 50 characters")
+    @Size(max = 15, message = "Last name cannot exceed 50 characters")
     private String lastName;
     @NotNull(message = "Email cannot be null")
-    @Email(message = "Invalid email format")
+    @Email(message = "Invalid email format, must contain: \"@gmail.com\"")
     private String email;
     @NotNull(message = "Password cannot be null")
     @Size(min = 6, max = 20, message = "Password must be between 6 and 20 characters")

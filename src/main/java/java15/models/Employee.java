@@ -41,11 +41,13 @@ public class Employee implements UserDetails {
     List<Cheque> cheques;
 
     @ManyToOne
-    @JoinColumn(name = "resraurant_id", nullable = false)
+    @JoinColumn(name = "restaurant_id")
     Restaurant restaurant;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));}
+        return List.of(new SimpleGrantedAuthority(role.name()));
+    }
 
     @Override
     public String getUsername() {

@@ -3,6 +3,8 @@ package java15.service.impl;
 import jakarta.persistence.EntityNotFoundException;
 import java15.dto.request.MenuItemRequest;
 import java15.dto.response.MenuItemResponse;
+import java15.models.Restaurant;
+import java15.repository.RestaurantRepository;
 import java15.service.MenuItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import java.util.stream.Collectors;
 public class MenuItemServiceImpl implements MenuItemService {
 
     private final MenuItemRepository menuItemRepository;
+    private final RestaurantRepository restaurantRepository;
 
     @Override
     public List<MenuItemResponse> getAllMenuItems() {
@@ -49,6 +52,9 @@ public class MenuItemServiceImpl implements MenuItemService {
     public MenuItemResponse createMenuItem(MenuItemRequest menuItemRequest) {
         MenuItem menuItem = new MenuItem();
         menuItem.setName(menuItemRequest.getName());
+        Restaurant restaurant = restaurantRepository.findById(menuItemRequest.getRestaurantId())
+                .orElseThrow(() -> new EntityNotFoundException("Restaurant with ID " + menuItemRequest.getRestaurantId() + " not found"));
+        menuItem.setRestaurant(restaurant);
         menuItem.setImageUrl(menuItemRequest.getImageUrl());
         menuItem.setPrice(menuItemRequest.getPrice());
         menuItem.setDescription(menuItemRequest.getDescription());

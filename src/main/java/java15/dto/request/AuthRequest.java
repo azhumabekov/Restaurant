@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class AuthRequest {
-    @NotNull(message = "email cannot be null") @Email(message = "Invalid email format")
+    @NotNull(message = "email cannot be null") @Email(message = "Invalid email format, must contain: @gmail.com")
     private String email;
     @NotBlank(message = "Password cannot be blank")
     @Size(min = 6,max = 20, message = "Password must be between 6 and 20 characters")

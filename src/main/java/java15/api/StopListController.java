@@ -1,6 +1,7 @@
 package java15.api;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java15.dto.request.StopListRequest;
 import java15.dto.response.SimpleResponse;
@@ -17,6 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/stop-list")
 @Slf4j
+@Tag(name = "stop list")
 @RequiredArgsConstructor
 public class StopListController {
 

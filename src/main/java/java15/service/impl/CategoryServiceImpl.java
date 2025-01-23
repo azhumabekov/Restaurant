@@ -21,6 +21,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryResponse createCategory(CategoryRequest request) {
+        if (!categoryRepo.findByName(request.getName()).isEmpty()) {
+            throw new IllegalArgumentException("Category already exists");
+        }
         Category category = new Category();
         category.setName(request.getName());
         categoryRepo.save(category);
@@ -47,13 +50,14 @@ public class CategoryServiceImpl implements CategoryService {
                 .orElseThrow(() -> new IllegalArgumentException("Category not found"));
         subCategoryRepository.deleteByCategory(category);
         categoryRepo.deleteById(id);
-
     }
 
     @Override
     public CategoryResponse updateCategory(Long id, CategoryRequest request) {
-//        return categoryRepo.saveAndFlush(id, request);
-        return null;
+        Category category = categoryRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("Category not found"));
+        category.setName(request.getName());
+        categoryRepo.save(category);
+        return new CategoryResponse(category.getId(), category.getName());
     }
 
 }
